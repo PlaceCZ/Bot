@@ -228,7 +228,12 @@ async function getCurrentImageUrl(index = '0') {
 			const parsed = JSON.parse(data);
 
 			// TODO: ew
-			if (!parsed.payload || !parsed.payload.data || !parsed.payload.data.subscribe || !parsed.payload.data.subscribe.data) return;
+			if (!parsed.payload || !parsed.payload.data || !parsed.payload.data.subscribe || !parsed.payload.data.subscribe.data){
+                		if(parsed.type){
+                    			console.log(parsed.payload)
+                		}
+                		return;
+            		}
 
 			ws.close();
 			resolve(parsed.payload.data.subscribe.data.name + `?noCache=${Date.now() * Math.random()}`);
