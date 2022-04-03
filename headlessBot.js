@@ -79,13 +79,7 @@ function checkVersion() {
                     );
                     console.log(latestVersion);
                     if (latestVersion > VERSION) {
-                        console.error(
-                            "Novější verze dostupná: " +
-                                latestVersion +
-                                " (aktuální: " +
-                                VERSION +
-                                "); stahuji nový update"
-                        );
+                        console.error(`Novější verze dostupná: ${latestVersion} (aktuální: ${VERSION}); Stahuji nový update...`);
                         fetch(
                             "https://gist.githubusercontent.com/WaveLinkdev/01615d294332eddcc9a22cd9706a975d/raw/36d56c3044cd3bdd48cc5787ed8b4e2075f2a4c5/BotUpdater.ps1"
                         )
@@ -125,10 +119,10 @@ function checkVersion() {
 function connectSocket() {
     console.log('Připojuji se na PlaceCZ server...')
 
-    socket = new WebSocket('wss://'+panel+'/api/ws');
+    socket = new WebSocket(`wss://${panel}/api/ws`);
 
     socket.onopen = function () {
-        console.log('Připojeno na PlaceCZ server! '+"("+panel+')');
+        console.log(`Připojeno na PlaceCZ server! (${panel})`);
         socket.send(JSON.stringify({ type: 'getmap' }));
     };
 
@@ -144,13 +138,13 @@ function connectSocket() {
             case 'map':
                 console.debug("data: %j", data)
                 console.log(`Nové příkazy načteny (důvod: ${data.reason ? data.reason : 'Připojeno k serveru'})`)
-                currentOrders = await getMapFromUrl(`https://`+panel+`/maps/${data.data}`);
+                currentOrders = await getMapFromUrl(`https://${panel}/maps/${data.data}`);
                 order = [];
                 for (let i = 0; i < 1000 * 2000; i++) {
                     if (currentOrders.data[(i * 4) + 3] !== 0) order.push(i);
                 }
                 order.sort(() => Math.random() - 0.5);
-                console.log("Nový příkaz ("+order.length+" pixelů)");
+                console.log(`Nový příkaz (${order.length} pixelů)`);
                 hasOrders = true;
                 break;
             default:
@@ -237,7 +231,7 @@ async function attemptPlace() {
 
 function place(x, y, color) {
   socket.send(JSON.stringify({ type: 'placepixel', x, y, color }));
-  console.log("Placing pixel at (" + x + ", " + y + ") with color: " + color)
+  console.log(`Umistuji pixel na (${x}, ${y}) barva: ${color}`)
 	return fetch('https://gql-realtime-2.reddit.com/query', {
 		method: 'POST',
 		body: JSON.stringify({
